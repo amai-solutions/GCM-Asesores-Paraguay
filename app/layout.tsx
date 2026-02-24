@@ -151,6 +151,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-poppins antialiased bg-white text-gray-900">
         <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17974346207"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17974346207');
+          `}
+        </Script>
+        <Script
           id="json-ld-organization"
           type="application/ld+json"
           strategy="afterInteractive"
