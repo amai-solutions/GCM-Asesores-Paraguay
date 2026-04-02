@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Shield, Calendar, CheckCircle } from "lucide-react"
 import { useEffect, useState } from "react"
-import VideoPlayer from "@/components/video-player"
+import BunnyVideoPlayer from "@/components/bunny-video-player"
 
 export default function GestoriaHeroSection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -47,13 +47,9 @@ export default function GestoriaHeroSection() {
             <span className="text-blue-600 font-semibold">EE.UU. como en España</span>.
           </p>
           {/* Video Section */}
-          <VideoPlayer
-            source="dailymotion"
-            videoId="k5UwAMFEaaUzFADifdI"
-            title="Video estrategia fiscal LLC"
-            autoplay={false}
-            controls={true}
-            mute={false}
+          <BunnyVideoPlayer
+            libraryId="518189"
+            videoId="84c37a7f-2eb5-4899-a112-c5c3cd7ba7ff"
           />
 
           {/* Features */}
