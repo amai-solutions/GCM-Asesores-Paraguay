@@ -17,7 +17,7 @@ export default function ConsultationSection() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const utmParams = new URLSearchParams()
-    const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "gc_id", "h_ad_id"]
+    const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "gc_id", "h_ad_id", "fbclid"]
 
     utmKeys.forEach((key) => {
       const value = urlParams.get(key)
