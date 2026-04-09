@@ -11,6 +11,7 @@ export default function BunnyVideoPlayerStrict({ libraryId, videoId }: Props) {
 
   const [isMuted, setIsMuted] = useState(true)
   const [isPlaying, setIsPlaying] = useState(true)
+  const [progress, setProgress] = useState(0)
 
   const durationRef = useRef(0)
   const halfRef = useRef(0)
@@ -73,6 +74,9 @@ export default function BunnyVideoPlayerStrict({ libraryId, videoId }: Props) {
             halfRef.current = d * 0.9
           }
           if (t > maxSeenRef.current) maxSeenRef.current = t
+          if (durationRef.current > 0) {
+            setProgress(Math.min(100, Math.round((maxSeenRef.current / durationRef.current) * 100)))
+          }
           if (!unlockedRef.current && durationRef.current > 0 && maxSeenRef.current >= halfRef.current) {
             unlockedRef.current = true
             setHasWatched90Percent(true)
@@ -109,6 +113,19 @@ export default function BunnyVideoPlayerStrict({ libraryId, videoId }: Props) {
           loading="lazy"
         />
       </div>
+      {!unlockedRef.current && progress > 0 && (
+        <div className="mt-3 flex items-center gap-3">
+          <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-600 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <span className="text-sm font-medium text-gray-600 whitespace-nowrap">
+            {progress}% visto {progress >= 90 ? "✅" : `— falta ${90 - progress}%`}
+          </span>
+        </div>
+      )}
     </div>
   )
 }
