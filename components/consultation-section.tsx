@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { AlertCircle } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useVideoProgress } from "@/contexts/video-progress-context"
@@ -12,31 +12,52 @@ export default function ConsultationSection() {
 
   const baseCalendlyUrl = "https://calendly.com/d/cs8k-x7t-xp7/consulta-fiscal-optimizar-tu-fiscalidad-en-paraguay"
 
-  const [finalCalendlyUrl, setFinalCalendlyUrl] = useState(baseCalendlyUrl)
+  const calendlyContainerRef = useRef<HTMLDivElement>(null)
+  const utmsRef = useRef<Record<string, string>>({})
 
   useEffect(() => {
+    if (typeof window === "undefined") return
     const urlParams = new URLSearchParams(window.location.search)
-    const utmParams = new URLSearchParams()
-    const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "gc_id", "h_ad_id", "fbclid"]
-
+    const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
     utmKeys.forEach((key) => {
       const value = urlParams.get(key)
-      if (value) utmParams.append(key, value)
+      if (value) utmsRef.current[key] = value
     })
+  }, [])
 
-    if (utmParams.toString()) {
-      setFinalCalendlyUrl(`${baseCalendlyUrl}?${utmParams.toString()}`)
+  const initCalendlyWidget = () => {
+    if (!(window as any).Calendly || !calendlyContainerRef.current) return
+    const u = utmsRef.current
+    ;(window as any).Calendly.initInlineWidget({
+      url: baseCalendlyUrl,
+      parentElement: calendlyContainerRef.current,
+      utm: {
+        utmSource: u.utm_source || "",
+        utmMedium: u.utm_medium || "",
+        utmCampaign: u.utm_campaign || "",
+        utmContent: u.utm_content || "",
+        utmTerm: u.utm_term || "",
+      },
+    })
+  }
+
+  useEffect(() => {
+    if (hasWatched90Percent && calendlyReady && calendlyContainerRef.current) {
+      initCalendlyWidget()
     }
-  }, [baseCalendlyUrl])
+  }, [hasWatched90Percent, calendlyReady])
 
   useEffect(() => {
     if (!hasWatched90Percent) return
-    if (window.Calendly) return setCalendlyReady(true)
+    if ((window as any).Calendly) {
+      setCalendlyReady(true)
+      return
+    }
 
     const script = document.createElement("script")
     script.src = "https://assets.calendly.com/assets/external/widget.js"
     script.async = true
-    script.onload = () => setCalendlyReady(true)
+    script.onload = () => { setCalendlyReady(true); initCalendlyWidget() }
     script.onerror = () => setCalendlyReady(false)
 
     document.head.appendChild(script)
@@ -79,11 +100,11 @@ Gracias,`)
           )}
 
           {hasWatched90Percent && calendlyReady ? (
-            <iframe
-              src={finalCalendlyUrl}
-              width="100%"
-              height="800"
+            <div
+              ref={calendlyContainerRef}
               style={{
+                minWidth: "100%",
+                height: "800px",
                 border: "none",
                 borderRadius: "16px",
                 boxShadow: "0px 12px 40px rgba(0,0,0,0.15)",
