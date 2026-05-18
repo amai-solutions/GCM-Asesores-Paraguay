@@ -2,42 +2,39 @@
 
 import { useEffect, useRef, useState } from "react"
 import { AlertCircle } from "lucide-react"
-import { usePathname } from "next/navigation"
 import { useVideoProgress } from "@/contexts/video-progress-context"
+import { loadAttribution, getCalendlyUtm, listenCalendlyConversion } from "@/lib/attribution"
+
+// TODO: Replace with your Calendly booking conversion label from Google Ads
+// Google Ads → Goals → Conversions → + New conversion action → Website → event "calendly_booking"
+// Label format: NB7YCPzwkoYcEN-D6_pC
+const CALENDLY_CONVERSION_LABEL = "CALENDLY_BOOKING_LABEL"
 
 export default function ConsultationSection() {
   const [calendlyReady, setCalendlyReady] = useState(false)
-  const pathname = usePathname()
   const { hasWatched90Percent } = useVideoProgress()
 
   const baseCalendlyUrl = "https://calendly.com/d/cs8k-x7t-xp7/consulta-fiscal-optimizar-tu-fiscalidad-en-paraguay"
 
   const calendlyContainerRef = useRef<HTMLDivElement>(null)
-  const utmsRef = useRef<Record<string, string>>({})
+  const attributionRef = useRef(loadAttribution())
 
+  // Refresh attribution on mount (reads localStorage if URL has no UTM params)
   useEffect(() => {
-    if (typeof window === "undefined") return
-    const urlParams = new URLSearchParams(window.location.search)
-    const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]
-    utmKeys.forEach((key) => {
-      const value = urlParams.get(key)
-      if (value) utmsRef.current[key] = value
-    })
+    attributionRef.current = loadAttribution()
+  }, [])
+
+  // Fire Google Ads conversion when Calendly confirms a booking
+  useEffect(() => {
+    return listenCalendlyConversion(CALENDLY_CONVERSION_LABEL)
   }, [])
 
   const initCalendlyWidget = () => {
     if (!(window as any).Calendly || !calendlyContainerRef.current) return
-    const u = utmsRef.current
     ;(window as any).Calendly.initInlineWidget({
       url: baseCalendlyUrl,
       parentElement: calendlyContainerRef.current,
-      utm: {
-        utmSource: u.utm_source || "",
-        utmMedium: u.utm_medium || "",
-        utmCampaign: u.utm_campaign || "",
-        utmContent: u.utm_content || "",
-        utmTerm: u.utm_term || "",
-      },
+      utm: getCalendlyUtm(attributionRef.current),
     })
   }
 

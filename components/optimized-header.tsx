@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation"
 import OptimizedImage from "./image-optimization"
 import { useRouter } from "next/navigation"
 import CTAWrapper from "@/components/cta-wrapper"
+import { appendUtmToUrl } from "@/lib/attribution"
 
 interface OptimizedHeaderProps {
   mode?: "full" | "landing"
@@ -78,15 +79,13 @@ export default function OptimizedHeader({ mode = "landing" }: OptimizedHeaderPro
 
     if (href.startsWith("#")) {
       if (pathname !== "/") {
-        router.push("/" + href)
+        router.push(appendUtmToUrl("/" + href, JSON.parse(localStorage.getItem("gcm_attribution") || "{}")))
       } else {
         const element = document.querySelector(href)
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" })
-        }
+        if (element) element.scrollIntoView({ behavior: "smooth" })
       }
     } else {
-      router.push(href)
+      router.push(appendUtmToUrl(href, JSON.parse(localStorage.getItem("gcm_attribution") || "{}")))
     }
   }
 
