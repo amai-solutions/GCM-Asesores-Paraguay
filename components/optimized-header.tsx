@@ -71,21 +71,25 @@ export default function OptimizedHeader({ mode = "landing" }: OptimizedHeaderPro
     { name: "Gestoría para LLCs", href: "/gestoria-para-llcs" },
     { name: "Sobre nosotros", href: "/sobre-nosotros" },
     { name: "FAQ", href: "#faq" },
-    { name: "Blog", href: "/blog" },
+    { name: "Blog", href: "https://blog.gcmasesores.io" },
   ]
 
   const handleNavClick = (href: string) => {
     setIsOpen(false)
 
+    const attr = JSON.parse(localStorage.getItem("gcm_attribution") || "{}")
+
     if (href.startsWith("#")) {
       if (pathname !== "/") {
-        router.push(appendUtmToUrl("/" + href, JSON.parse(localStorage.getItem("gcm_attribution") || "{}")))
+        router.push(appendUtmToUrl("/" + href, attr))
       } else {
         const element = document.querySelector(href)
         if (element) element.scrollIntoView({ behavior: "smooth" })
       }
+    } else if (href.startsWith("http")) {
+      window.open(appendUtmToUrl(href, attr), "_blank", "noopener,noreferrer")
     } else {
-      router.push(appendUtmToUrl(href, JSON.parse(localStorage.getItem("gcm_attribution") || "{}")))
+      router.push(appendUtmToUrl(href, attr))
     }
   }
 
