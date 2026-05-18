@@ -174,7 +174,7 @@ export default function OptimizedHeader({ mode = "landing" }: OptimizedHeaderPro
             <Link
               href="/"
               className="flex items-center transition-transform hover:scale-105"
-              onClick={(e) => { e.preventDefault(); handleNavClick("/") }}}
+              onClick={(e) => { e.preventDefault(); handleNavClick("/") }}
             >
               <OptimizedImage
                 src="/images/logo-blue.webp"
@@ -261,7 +261,7 @@ export default function OptimizedHeader({ mode = "landing" }: OptimizedHeaderPro
               <Link
                 href="/"
                 className="flex items-center transition-transform hover:scale-105"
-                onClick={(e) => { e.preventDefault(); handleNavClick("/") }}}
+                onClick={(e) => { e.preventDefault(); handleNavClick("/") }}
               >
                 <OptimizedImage
                   src="/images/logo-blue.webp"
