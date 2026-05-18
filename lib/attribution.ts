@@ -62,17 +62,31 @@ export function getCalendlyUtm(attr: Attribution) {
   }
 }
 
-// Append UTM params to any URL string (internal or external)
 export function appendUtmToUrl(url: string, attr: Attribution): string {
   if (!url || Object.keys(attr).filter((k) => !k.startsWith('_')).length === 0) return url
   try {
     const target = new URL(url, window.location.origin)
-    ;['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((k) => {
+    ALL_PARAM_KEYS.forEach((k) => {
       if (attr[k]) target.searchParams.set(k, attr[k])
     })
     return target.toString()
   } catch {
     return url
+  }
+}
+
+const CLICK_ID_KEYS = ['gclid', 'fbclid', 'gbraid', 'wbraid', 'msclkid', 'ttclid']
+
+export function buildCalendlyUrl(baseUrl: string, attr: Attribution): string {
+  if (!baseUrl) return baseUrl
+  try {
+    const target = new URL(baseUrl)
+    CLICK_ID_KEYS.forEach((k) => {
+      if (attr[k]) target.searchParams.set(k, attr[k])
+    })
+    return target.toString()
+  } catch {
+    return baseUrl
   }
 }
 

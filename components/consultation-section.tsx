@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { AlertCircle } from "lucide-react"
 import { useVideoProgress } from "@/contexts/video-progress-context"
-import { loadAttribution, getCalendlyUtm, listenCalendlyConversion } from "@/lib/attribution"
+import { loadAttribution, getCalendlyUtm, listenCalendlyConversion, buildCalendlyUrl } from "@/lib/attribution"
 
 // TODO: Replace with your Calendly booking conversion label from Google Ads
 // Google Ads → Goals → Conversions → + New conversion action → Website → event "calendly_booking"
@@ -32,7 +32,7 @@ export default function ConsultationSection() {
   const initCalendlyWidget = () => {
     if (!(window as any).Calendly || !calendlyContainerRef.current) return
     ;(window as any).Calendly.initInlineWidget({
-      url: baseCalendlyUrl,
+      url: buildCalendlyUrl(baseCalendlyUrl, attributionRef.current),
       parentElement: calendlyContainerRef.current,
       utm: getCalendlyUtm(attributionRef.current),
     })

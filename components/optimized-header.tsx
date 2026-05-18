@@ -109,7 +109,7 @@ export default function OptimizedHeader({ mode = "landing" }: OptimizedHeaderPro
 
           <div className="container mx-auto px-4 lg:px-6 relative">
             <div className="flex items-center justify-between h-20">
-              <Link href="/" className="flex items-center transition-transform hover:scale-105 mx-auto md:mx-0">
+              <Link href="/" className="flex items-center transition-transform hover:scale-105 mx-auto md:mx-0" onClick={(e) => { e.preventDefault(); handleNavClick("/") }}>
                 <OptimizedImage
                   src="/images/logo-blue.webp"
                   alt="GCMAsesores Logo"
@@ -174,7 +174,7 @@ export default function OptimizedHeader({ mode = "landing" }: OptimizedHeaderPro
             <Link
               href="/"
               className="flex items-center transition-transform hover:scale-105"
-              onClick={() => handleNavClick("#inicio")}
+              onClick={(e) => { e.preventDefault(); handleNavClick("/") }}}
             >
               <OptimizedImage
                 src="/images/logo-blue.webp"
@@ -261,7 +261,7 @@ export default function OptimizedHeader({ mode = "landing" }: OptimizedHeaderPro
               <Link
                 href="/"
                 className="flex items-center transition-transform hover:scale-105"
-                onClick={() => handleNavClick("#inicio")}
+                onClick={(e) => { e.preventDefault(); handleNavClick("/") }}}
               >
                 <OptimizedImage
                   src="/images/logo-blue.webp"

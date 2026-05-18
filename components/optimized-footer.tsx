@@ -1,14 +1,28 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Instagram, Facebook, Youtube, Mail, Phone, Building } from "lucide-react"
 import OptimizedImage from "./image-optimization"
+import { appendUtmToUrl } from "@/lib/attribution"
 
 export default function OptimizedFooter() {
+  const router = useRouter()
+
   const handleConsultaClick = () => {
     const element = document.querySelector("#consulta")
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  const go = (href: string, e: React.MouseEvent) => {
+    e.preventDefault()
+    const attr = JSON.parse(localStorage.getItem("gcm_attribution") || "{}")
+    if (href.startsWith("http")) {
+      window.open(appendUtmToUrl(href, attr), "_blank", "noopener noreferrer")
+    } else {
+      router.push(appendUtmToUrl(href, attr))
     }
   }
 
@@ -59,6 +73,7 @@ export default function OptimizedFooter() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#225DF6] transition-all duration-300 hover:scale-110"
                 aria-label="Instagram"
+                onClick={(e) => go("https://www.instagram.com/gcmsociety/", e)}
               >
                 <Instagram className="h-6 w-6" />
               </Link>
@@ -68,6 +83,7 @@ export default function OptimizedFooter() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#225DF6] transition-all duration-300 hover:scale-110"
                 aria-label="Facebook"
+                onClick={(e) => go("https://www.facebook.com/people/Global-Community-Management-LLC/100091921369533/", e)}
               >
                 <Facebook className="h-6 w-6" />
               </Link>
@@ -77,6 +93,7 @@ export default function OptimizedFooter() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#225DF6] transition-all duration-300 hover:scale-110"
                 aria-label="YouTube"
+                onClick={(e) => go("https://www.youtube.com/channel/UCe0BfgldW1X_i-RL-nkq1aA", e)}
               >
                 <Youtube className="h-6 w-6" />
               </Link>
@@ -91,6 +108,7 @@ export default function OptimizedFooter() {
                 <Link
                   href="/aviso-legal"
                   className="text-gray-400 hover:text-[#225DF6] transition-colors text-sm block"
+                  onClick={(e) => go("/aviso-legal", e)}
                 >
                   Aviso legal
                 </Link>
@@ -99,6 +117,7 @@ export default function OptimizedFooter() {
                 <Link
                   href="/politica-privacidad"
                   className="text-gray-400 hover:text-[#225DF6] transition-colors text-sm block"
+                  onClick={(e) => go("/politica-privacidad", e)}
                 >
                   Política de privacidad
                 </Link>
@@ -107,6 +126,7 @@ export default function OptimizedFooter() {
                 <Link
                   href="/politica-de-cookies"
                   className="text-gray-400 hover:text-[#225DF6] transition-colors text-sm block"
+                  onClick={(e) => go("/politica-de-cookies", e)}
                 >
                   Política de cookies
                 </Link>
@@ -115,6 +135,7 @@ export default function OptimizedFooter() {
                 <Link
                   href="/descargo-de-responsabilidad"
                   className="text-gray-400 hover:text-[#225DF6] transition-colors text-sm block"
+                  onClick={(e) => go("/descargo-de-responsabilidad", e)}
                 >
                   Descargo de responsabilidad
                 </Link>
@@ -140,7 +161,11 @@ export default function OptimizedFooter() {
                 <div>
                   <span className="text-gray-500">Sitio Web:</span>
                   <p>
-                    <Link href="https://gcmasesores.io" className="text-[#225DF6] hover:underline font-medium">
+                    <Link
+                      href="https://gcmasesores.io"
+                      className="text-[#225DF6] hover:underline font-medium"
+                      onClick={(e) => go("https://gcmasesores.io", e)}
+                    >
                       gcmasesores.io
                     </Link>
                   </p>
@@ -181,6 +206,7 @@ export default function OptimizedFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#225DF6] hover:text-[#1e52d9] transition-colors font-medium"
+                  onClick={(e) => go("https://amai.solutions/", e)}
                 >
                   AMAI
                 </Link>
