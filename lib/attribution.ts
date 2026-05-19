@@ -75,13 +75,11 @@ export function appendUtmToUrl(url: string, attr: Attribution): string {
   }
 }
 
-const CLICK_ID_KEYS = ['gclid', 'fbclid', 'gbraid', 'wbraid', 'msclkid', 'ttclid']
-
 export function buildCalendlyUrl(baseUrl: string, attr: Attribution): string {
   if (!baseUrl) return baseUrl
   try {
     const target = new URL(baseUrl)
-    CLICK_ID_KEYS.forEach((k) => {
+    ALL_PARAM_KEYS.forEach((k) => {
       if (attr[k]) target.searchParams.set(k, attr[k])
     })
     return target.toString()

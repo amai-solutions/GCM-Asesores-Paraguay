@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { AlertCircle } from "lucide-react"
 import { useVideoProgress } from "@/contexts/video-progress-context"
-import { loadAttribution, getCalendlyUtm, listenCalendlyConversion, buildCalendlyUrl } from "@/lib/attribution"
+import { loadAttribution, getCalendlyUtm, listenCalendlyConversion, buildCalendlyUrl, appendUtmToUrl } from "@/lib/attribution"
 
 // TODO: Replace with your Calendly booking conversion label from Google Ads
 // Google Ads → Goals → Conversions → + New conversion action → Website → event "calendly_booking"
@@ -66,8 +66,10 @@ export default function ConsultationSection() {
   }, [hasWatched90Percent])
 
   const handleWhatsAppClick = () => {
+    const attr = JSON.parse(localStorage.getItem("gcm_attribution") || "{}")
     const message = encodeURIComponent("Hola, me gustaría agendar una asesoría fiscal gratuita para crear una LLC.")
-    window.open(`https://wa.me/13526080344?text=${message}`, "_blank")
+    const base = `https://wa.me/13526080344?text=${message}`
+    window.open(appendUtmToUrl(base, attr), "_blank")
   }
 
   const handleEmailClick = () => {
